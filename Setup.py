@@ -28,7 +28,7 @@ class Main:
 
         req_winget = requests.get(url_winget)
 
-        #* カレントディレクトリにwinget.msixbundleを落とす
+        #* カレントディレクトリにwinget.msixbundleを保存
         os.makedirs("winget", exist_ok=True)
         with open((os.path.join("winget/", "winget.msixbundle")), "wb") as f:
             for chunk in req_winget.iter_content(chunk_size=1024):
@@ -37,7 +37,6 @@ class Main:
 
         #* Pythonから直接Powershellを叩けないのでcmd経由でpowershellコマンドを実行する
         powershell_command = ("Add-AppxPackage -Path " + (os.path.join(self.current_dir, "winget", "winget.msixbundle")))
-        
         subprocess.run((f"powershell -Command {powershell_command}"), shell=True)
 
 
