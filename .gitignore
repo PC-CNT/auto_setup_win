@@ -1,4 +1,5 @@
 # 
+.vscode
 *.msixbundle
 winget_list.txt
 #
