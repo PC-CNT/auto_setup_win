@@ -1,7 +1,7 @@
 # 
 .vscode
 *.msixbundle
-winget_list.json
+*.json
 #
 
 # Byte-compiled / optimized / DLL files
