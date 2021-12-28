@@ -4,8 +4,9 @@ import requests
 import subprocess
 import shutil
 import logging
+import json
 
-
+#! VSCodeで実行するときはF5じゃないとsubprocess関連のコードがﾀﾋぬ
 
 class Main:
     #* ここで定義する変数はクラス変数になると噂されている
@@ -41,9 +42,22 @@ class Main:
 
 
     def setting_winget(self):
-        path_json = (os.path.join((os.getenv("LOCALAPPDATA")), (r"Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json")))
-        subprocess.Popen(["start", path_json], shell=True)
-        logger.info(f"path_json:{path_json}")
+        default_settings_json = (os.path.join((os.getenv("LOCALAPPDATA")), (r"Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json")))
+        if os.path.exists(self.current_dir + "/winget/winget_settings.json"):
+            shutil.copyfile(self.current_dir + "/winget/winget_settings.json", default_settings_json)
+            logger.info("settings.jsonをコピーしました")
+        # subprocess.Popen(["start", default_settings_json], shell=True)
+        logger.info(f"default_settings_json:{default_settings_json}")
+
+
+    def winget_install_software(self):
+        path_import_json = os.path.abspath(os.path.join("winget/", "winget_list.json"))
+        logger.info(f"path_import_json:{path_import_json}")
+        # with open(os.path.join(path_import_json), "r") as f:
+        #     winget_list = f.read()
+        #     logger.info(f"winget_list:{winget_list}")
+        subprocess.run(f"winget import {path_import_json}", shell=True)
+        # return
 
 
     def mainprocess(self):
@@ -54,6 +68,8 @@ class Main:
         else:
             print("winget is already installed.")
         self.setting_winget()
+        self.winget_install_software()
+
         print("Done.")
 
 if __name__ == "__main__":
