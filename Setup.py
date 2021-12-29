@@ -44,10 +44,10 @@ class Main:
     def setting_winget(self):
         default_settings_json = (os.path.join((os.getenv("LOCALAPPDATA")), (r"Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json")))
         if os.path.exists(self.current_dir + "/winget/winget_settings.json"):
+            logger.info(f"default_settings_json:{default_settings_json}")
             shutil.copyfile(self.current_dir + "/winget/winget_settings.json", default_settings_json)
             logger.info("settings.jsonをコピーしました")
         # subprocess.Popen(["start", default_settings_json], shell=True)
-        logger.info(f"default_settings_json:{default_settings_json}")
 
 
     def winget_install_software(self):
