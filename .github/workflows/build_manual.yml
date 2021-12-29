@@ -1,0 +1,25 @@
+
+name: build_manual
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      
+      - name: build exe
+        run: |
+          pip install pyinstaller
+          pyinstaller --onefile --uac-admin Setup.py
+          
+      - name: upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-exe
+          path: dist/Setup.exe
