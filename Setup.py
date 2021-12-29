@@ -4,7 +4,7 @@ import requests
 import subprocess
 import shutil
 import logging
-import json
+# import json
 
 #! VSCodeで実行するときはF5じゃないとsubprocess関連のコードがﾀﾋぬ
 
@@ -51,14 +51,20 @@ class Main:
 
 
     def winget_install_software(self):
-        path_import_json = os.path.abspath(os.path.join("winget/", "winget_list.json"))
-        logger.info(f"path_import_json:{path_import_json}")
-        # with open(os.path.join(path_import_json), "r") as f:
-        #     winget_list = f.read()
-        #     logger.info(f"winget_list:{winget_list}")
-        subprocess.run(f"winget import {path_import_json}", shell=True)
-        # return
+        """パッケージのIDが書かれたテキストをforで回してwinget installを実行する
 
+        winget import でjsonから一括インストールすることもできるが、現バージョン（v1.1.12653）では同じ名前のパッケージが存在した場合に
+        「複数のパッケージが入力条件に一致しました。入力内容を修正してください。」という警告が出てインストールされないので
+        あらかじめIDをリストにしてから完全一致検索で指定してインストールする方法をとる
+        """
+        #? path_import_json = os.path.abspath(os.path.join("winget/", "winget_list.json"))
+        #? logger.info(f"path_import_json:{path_import_json}")
+        #? subprocess.run(f"winget import {path_import_json}", shell=True)
+        path_install_list = os.path.abspath(os.path.join("winget/", "winget_install_list.txt"))
+        logger.info(f"path_install_list:{path_install_list}")
+        with open(path_install_list, "r") as f:
+            for id in f:
+                subprocess.run(f"winget install --accept-package-agreements --accept-source-agreements -h -e --id  {id.strip()}", shell=True)
 
     def mainprocess(self):
         self.setup()
