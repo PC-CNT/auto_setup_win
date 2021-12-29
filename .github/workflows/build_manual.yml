@@ -15,6 +15,7 @@ jobs:
       
       - name: build exe
         run: |
+          pip install requests
           pip install pyinstaller
           pyinstaller --onefile --uac-admin Setup.py
           
