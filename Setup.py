@@ -4,6 +4,8 @@ import requests
 import subprocess
 import shutil
 import logging
+import tkinter
+from tkinter import filedialog
 # import json
 
 #! VSCodeで実行するときはF5じゃないとsubprocess関連のコードがﾀﾋぬ
@@ -18,7 +20,14 @@ class Main:
         self.current_dir = os.path.dirname(os.path.abspath(__file__))
         os.chdir(self.current_dir)
         logger.info(f"Current dir:{self.current_dir}")
+        root = tkinter.Tk()
+        root.withdraw()
 
+    def check_path_exists(self, path):
+        if os.path.exists(path):
+            return path
+        else:
+            return False
 
     def setup(self):
         return
@@ -60,15 +69,19 @@ class Main:
         #? path_import_json = os.path.abspath(os.path.join("winget/", "winget_list.json"))
         #? logger.info(f"path_import_json:{path_import_json}")
         #? subprocess.run(f"winget import {path_import_json}", shell=True)
-        path_install_list = os.path.abspath(os.path.join("winget/", "winget_install_list.txt"))
+        #* 論理演算子の仕様を活用する
+        path_install_list = (
+            self.check_path_exists(os.path.abspath(os.path.join("winget/", "winget_install_list.txt"))) or filedialog.askopenfilename(
+            initialdir=self.current_dir, title="Select file", filetypes=(("txt files", "*.txt"), ("all files", "*.*")))
+            )
         logger.info(f"path_install_list:{path_install_list}")
         with open(path_install_list, "r") as f:
             for id in f:
                 subprocess.run(f"winget install --accept-package-agreements --accept-source-agreements -h -e --id  {id.strip()}", shell=True)
 
+
     def mainprocess(self):
         self.setup()
-        # self.install_winget()
         if not (shutil.which("winget")):
             self.install_winget()
         else:
