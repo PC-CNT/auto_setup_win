@@ -56,6 +56,8 @@ class Main:
             logger.info(f"default_settings_json:{default_settings_json}")
             shutil.copyfile(self.current_dir + "/winget/winget_settings.json", default_settings_json)
             logger.info("settings.jsonをコピーしました")
+        else:
+            print("settings.jsonが存在しません\nデフォルトの設定を使用します")
         # subprocess.Popen(["start", default_settings_json], shell=True)
 
 
@@ -72,7 +74,7 @@ class Main:
         #* 論理演算子の仕様を活用する
         path_install_list = (
             self.check_path_exists(os.path.abspath(os.path.join("winget/", "winget_install_list.txt"))) or filedialog.askopenfilename(
-            initialdir=self.current_dir, title="Select file", filetypes=(("txt files", "*.txt"), ("all files", "*.*")))
+            initialdir=self.current_dir, title="パッケージIDのリストを選択", filetypes=(("txt files", "*.txt"), ("all files", "*.*")))
             )
         logger.info(f"path_install_list:{path_install_list}")
         with open(path_install_list, "r") as f:
@@ -89,7 +91,7 @@ class Main:
         self.setting_winget()
         self.winget_install_software()
 
-        print("Done.")
+        input("Done.")
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
