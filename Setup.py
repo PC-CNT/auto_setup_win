@@ -19,7 +19,7 @@ class Main:
         #* ここで定義する変数はインスタンス変数になると噂されている
         self.current_dir = os.path.dirname(os.path.abspath(__file__))
         os.chdir(self.current_dir)
-        logger.info(f"Current dir:{self.current_dir}")
+        logger.debug(f"Current dir:{self.current_dir}")
         root = tkinter.Tk()
         root.withdraw()
 
@@ -53,7 +53,7 @@ class Main:
     def setting_winget(self):
         default_settings_json = (os.path.join((os.getenv("LOCALAPPDATA")), (r"Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json")))
         if os.path.exists(self.current_dir + "/winget/winget_settings.json"):
-            logger.info(f"default_settings_json:{default_settings_json}")
+            logger.debug(f"default_settings_json:{default_settings_json}")
             shutil.copyfile(self.current_dir + "/winget/winget_settings.json", default_settings_json)
             logger.info("settings.jsonをコピーしました")
         else:
@@ -76,7 +76,10 @@ class Main:
             self.check_path_exists(os.path.abspath(os.path.join("winget/", "winget_install_list.txt"))) or filedialog.askopenfilename(
             initialdir=self.current_dir, title="パッケージIDのリストを選択", filetypes=(("txt files", "*.txt"), ("all files", "*.*")))
             )
-        logger.info(f"path_install_list:{path_install_list}")
+        if not path_install_list:
+            logger.info("パッケージのインストールがキャンセルされました")
+            return
+        logger.debug(f"path_install_list:{path_install_list}")
         with open(path_install_list, "r") as f:
             for id in f:
                 subprocess.run(f"winget install --accept-package-agreements --accept-source-agreements -h -e --id  {id.strip()}", shell=True)
@@ -94,6 +97,6 @@ class Main:
         input("Done.")
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     logger = logging.getLogger(__name__)
     Main().mainprocess()
