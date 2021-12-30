@@ -22,7 +22,7 @@ Windowsクリーンインストール後の環境構築を自動化したい
 
 の2つを用意します
 
-winget_install_list.txtにはインストールしたいパッケージのIDを一行ずつ記入します（examples参照）
+winget_install_list.txtにはインストールしたいパッケージのIDを一行ずつ記入します（[examples](./examples/winget/winget_install_list.txt)を参照）
 
 ```cmd
 .
