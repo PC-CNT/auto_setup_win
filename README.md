@@ -1,4 +1,4 @@
-# auto_setup_win
+# About
 
 Windowsクリーンインストール後の環境構築を自動化したい
 
@@ -41,12 +41,16 @@ winget_install_list.txtが存在しない場合は、ファイル選択のダイ
 
 ## Build
 
-Pyinstallerでexe化してます
+[Pyinstaller](https://github.com/pyinstaller/pyinstaller)でexe化してます
 
 ```cmd
 pyinstaller --onefile --uac-admin Setup.py
 ```
 
+Other
+
+このスクリプトではコマンドを叩く動作を自動で行っているだけなので、パッケージ管理ツール自体やパッケージの中身とは一切関係ありません
+
 ## Licence
 
-[MIT](https://opensource.org/licenses/MIT)
+[MIT Licence](https://opensource.org/licenses/MIT)
