@@ -1,6 +1,7 @@
 # 
-winget
-.vscode
+winget/
+!example/*
+.vscode/
 *.msixbundle
 *.json
 #
