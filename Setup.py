@@ -6,7 +6,7 @@ import shutil
 import logging
 import tkinter
 from tkinter import filedialog
-# import json
+import json
 
 #! VSCodeで実行するときはF5じゃないとsubprocess関連のコードがﾀﾋぬ
 
@@ -62,27 +62,39 @@ class Main:
 
 
     def winget_install_software(self):
-        """パッケージのIDが書かれたテキストをforで回してwinget installを実行する
+        """winget exportで出力されたjsonの中身をforで回してwinget installを実行する
 
-        winget import でjsonから一括インストールすることもできるが、現バージョン（v1.1.12653）では同じ名前のパッケージが存在した場合に
+        winget import でjsonから一括インストールすることもできるが、現バージョン（v1.1.12701）では同じ名前のパッケージが存在した場合に
         「複数のパッケージが入力条件に一致しました。入力内容を修正してください。」という警告が出てインストールされないので
-        あらかじめIDをリストにしてから完全一致検索で指定してインストールする方法をとる
+        jsonからIDだけ持ってきて個別でwinget installを行うようにした
         """
         #? path_import_json = os.path.abspath(os.path.join("winget/", "winget_list.json"))
         #? logger.info(f"path_import_json:{path_import_json}")
         #? subprocess.run(f"winget import {path_import_json}", shell=True)
         #* 論理演算子の仕様を活用する
-        path_install_list = (
-            self.check_path_exists(os.path.abspath(os.path.join("winget/", "winget_install_list.txt"))) or filedialog.askopenfilename(
-            initialdir=self.current_dir, title="パッケージIDのリストを選択", filetypes=(("txt files", "*.txt"), ("all files", "*.*")))
+
+        path_install_json = (
+            self.check_path_exists(
+                os.path.abspath(os.path.join("winget/", "winget_list.json"))
+            ) or (
+                filedialog.askopenfilename(
+                    initialdir=self.current_dir, title="exportしたjsonを選択", filetypes=(("json", "*.json"), ("all files", "*.*"))
+                )
             )
-        if not path_install_list:
+        )
+        if not path_install_json:
             logger.info("パッケージのインストールがキャンセルされました")
             return
-        logger.debug(f"path_install_list:{path_install_list}")
-        with open(path_install_list, "r") as f:
-            for id in f:
-                subprocess.run(f"winget install --accept-package-agreements --accept-source-agreements -h -e --id  {id.strip()}", shell=True)
+        logger.debug(f"path_install_json:{path_install_json}")
+        #* jsonファイルを読み込む
+        with open(path_install_json, "r") as f:
+            json_packages = json.load(f)
+            for d_package in ((json_packages["Sources"][0]["Packages"])):
+                PackageIdentifier = d_package["PackageIdentifier"]
+                logger.debug(f"PackageIdentifier:{PackageIdentifier}")
+                logger.info(f"Installing {PackageIdentifier}")
+                subprocess.run(f"winget install --accept-package-agreements --accept-source-agreements -h -e --id {PackageIdentifier}", shell=True)
+
 
 
     def mainprocess(self):

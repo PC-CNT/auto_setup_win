@@ -1,4 +1,0 @@
-7zip.7zip
-Heroku.HerokuCLI
-Git.Git
-OpenJS.NodeJS
