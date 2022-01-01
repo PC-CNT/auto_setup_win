@@ -34,9 +34,6 @@ class Main:
         else:
             return False
 
-    def setup(self):
-        return
-
 
     def install_winget(self):
         url_winget = ("https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle")
@@ -103,7 +100,6 @@ class Main:
 
 
     def mainprocess(self):
-        self.setup()
         if not (shutil.which("winget")):
             self.install_winget()
         else:

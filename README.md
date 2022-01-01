@@ -36,16 +36,16 @@ winget_settings.jsonは必須でありませんが、必要であれば[公式�
 
 ```cmd
 .
-├── Setup.exe
+├── main.exe
 └── winget
     ├── winget_list.json
     └── winget_settings.json
 ```
 
-Setup.exeと同じ階層にwingetフォルダーを作成し、
+main.exeと同じ階層にwingetフォルダーを作成し、
 その中にwinget_list.jsonとwinget_settings.jsonを配置してください。
 
-Setup.exeを管理者権限で実行したら、自動でインストールが開始されます
+main.exeを管理者権限で実行したら、自動でインストールが開始されます
 
 - winget_list.jsonが存在しない場合はファイル選択のダイアログが表示されます
 - winget_settings.jsonが存在しない場合はデフォルトの設定が適用されます
@@ -55,7 +55,7 @@ Setup.exeを管理者権限で実行したら、自動でインストールが�
 [Pyinstaller](https://github.com/pyinstaller/pyinstaller)でexe化してます
 
 ```cmd
-pyinstaller --onefile --uac-admin Setup.py
+pyinstaller --onefile --uac-admin main.py
 ```
 
 ## Other
