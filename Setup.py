@@ -17,7 +17,12 @@ class Main:
 
     def __init__(self):
         #* ここで定義する変数はインスタンス変数になると噂されている
-        self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        #? self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        #* __file__だとexe化した際にディレクトリがおかしくなる
+        if getattr(sys, 'frozen', False):
+            self.current_dir = os.path.dirname(sys.executable)
+        else:
+            self.current_dir = os.path.dirname(os.path.abspath(__file__))
         os.chdir(self.current_dir)
         logger.debug(f"Current dir:{self.current_dir}")
         root = tkinter.Tk()
