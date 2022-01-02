@@ -27,7 +27,7 @@ wingetでは
 クリーンインストールする前に
 
 ```cmd
-winget export -o winget_list.json
+winget export --include-versions -o winget_list.json
 ```
 
 上記のコマンドを実行してwinget_list.jsonを作成しておきます

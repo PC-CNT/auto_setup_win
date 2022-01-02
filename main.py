@@ -7,6 +7,7 @@ import logging
 import tkinter
 from tkinter import filedialog
 import json
+# import winreg
 
 #! VSCodeで実行するときはF5じゃないとsubprocess関連のコードがﾀﾋぬ
 
@@ -70,9 +71,6 @@ class Main:
         「複数のパッケージが入力条件に一致しました。入力内容を修正してください。」という警告が出てインストールされないので
         jsonからIDだけ持ってきて個別でwinget installを行うようにした
         """
-        #? path_import_json = os.path.abspath(os.path.join("winget/", "winget_list.json"))
-        #? logger.info(f"path_import_json:{path_import_json}")
-        #? subprocess.run(f"winget import {path_import_json}", shell=True)
         #* 論理演算子の仕様を活用する
 
         path_install_json = (
@@ -93,9 +91,15 @@ class Main:
             json_packages = json.load(f)
             for d_package in ((json_packages["Sources"][0]["Packages"])):
                 PackageIdentifier = d_package["PackageIdentifier"]
-                logger.debug(f"PackageIdentifier:{PackageIdentifier}")
-                logger.info(f"Installing {PackageIdentifier}")
-                subprocess.run(f"winget install --accept-package-agreements --accept-source-agreements -h -e --id {PackageIdentifier}", shell=True)
+                #* Versionの値がNoneまたは"Unknown"だった場合はwinget installのバージョン指定をしない
+                if ((Version := d_package.get("Version", "Unknown")) == "Unknown"):
+                    logger.info(f"{PackageIdentifier}のバージョンが指定されていない、もしくは不明です。最新のバージョンをインストールします")
+                    subprocess.run(f"winget install --accept-package-agreements --accept-source-agreements -h -e --id {PackageIdentifier}", shell=True)
+                else:
+                    # logger.debug(f"PackageIdentifier:{PackageIdentifier}")
+                    # logger.debug(f"Version:{Version}")
+                    logger.info(f"{PackageIdentifier}のバージョン{Version}をインストールします")
+                    subprocess.run(f"winget install --accept-package-agreements --accept-source-agreements -h -e --id {PackageIdentifier} -v {Version}", shell=True)
 
 
 
